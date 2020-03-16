@@ -6,7 +6,7 @@
     <meta content='width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
     <meta name="viewport" content="width=device-width" />
     <meta name="license" content="
-        Copyright 2013 Google, Abram Hindle
+        Copyright 2020 Google, Abram Hindle, Devin Dai
         
         Licensed under the Apache License, Version 2.0 (the "License");
         you may not use this file except in compliance with the License.
@@ -22,12 +22,13 @@
     "/>
     <script src="json2.js"></script>
   </head> 
-  <body bgcolor="white" height="100%" width="100%"> 
+  <body bgcolor="#FAEBD7" height="100%" width="100%"> 
     <div id="debug"></div>
+    <img id="design" width="0" height="0" src="coolimage.jpg">
     <canvas id="c" width="100%" height="100%" style="-webkit-tap-highlight-color: transparent;"></canvas> 
-
     <script>
       // Fix me
+var image = document.getElementById("design");
 var canvas = document.getElementById('c');
 var host = window.location.host;
 var context = canvas.getContext("2d");
@@ -44,17 +45,32 @@ debug("Test");
 
 world = {};
 
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch  Accessed on 2020-03-16
+function sendJSONFetchHTTPRequest(url, objects, callback) {
+    return fetch(url, {
+    method: 'POST', 
+    body: JSON.stringify(objects),
+    headers: new Headers({
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+    }),
+    });
+    
+}
+
+// https://github.com/DevinDai13/CMPUT404-assignment-ajax by Devin Dai. Accessed on 2020-03-16
 //XXX: TODO Make this prettier!
 function drawCircle(context,entity) {
     with(context) {
-        beginPath();                
+        beginPath();              
         lineWidth = 3;
         var x = entity["x"];
         var y = entity["y"];
-        //moveTo(x,y);
         fillStyle = entity["colour"];
         strokeStyle = fillStyle;
-        arc(x, y, (entity["radius"])?entity["radius"]:50, 0, 2.0 * Math.PI, false);  
+        arc(x, y, (entity["radius"])?entity["radius"]:50, 0, 2.0 * Math.PI, false);
+        drawImage(image, x+5, y+5, 40, 40);   
+        arc(x, y, (entity["radius"]+9)?entity["radius"]+9:50, 2.0 * Math.PI, 0, false); 
         stroke();                                
     }
 }
@@ -72,7 +88,7 @@ function prepEntity(entity) {
 function clearFrame() {
     with(context) {
 	moveTo(0,0);
-	fillStyle = "#000";
+	fillStyle = "#FAEBD7";
 	fillRect(0,0,W,H);
     }
 
@@ -121,10 +137,18 @@ function getPosition(e) {
 	}
 }
 
+function do_nothing_callback(new_world){
+}
+
 function addEntity(entity, data) {
     world[entity] = data;
     drawNextFrame(); // (but should we?)
     //XXX: Send a XHTML Request that updates the entity you just modified!
+    var new_entity = {};
+    new_entity[entity] = data;
+    socket.send(JSON.stringify(new_entity));
+    // update the newest entity
+    sendJSONFetchHTTPRequest('/entity/' + entity, world[entity], do_nothing_callback);
 }
 var counter = 0;
 function addEntityWithoutName(data) {
@@ -231,15 +255,15 @@ mouse = (function() {
 // Add the application specific mouse listeners!
 //XXX: TODO Make these prettier!
 mouse.mousedowners.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'blue'});
+    addEntityWithoutName({'x':x,'y':y,'colour':'orange'});
 });
 
 mouse.mouseuppers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'red'});
+    addEntityWithoutName({'x':x,'y':y,'colour':'orange'});
 });
 
 mouse.mousedraggers.push(function(x,y,clicked,e) {
-    addEntityWithoutName({'x':x,'y':y,'colour':'green',
+    addEntityWithoutName({'x':x,'y':y,'colour':'purple',
                           'radius':10});
 });
 
@@ -248,12 +272,20 @@ function update() {
     drawFrame();
 }
 
+// Reference: https://stackoverflow.com/questions/7241878/for-in-loops-in-javascript-key-value-pairs answered Aug 30 '11 at 10:37 J0HN
+function get_new_world_callback(new_world){
+    for (let index in new_world){
+        world[index] = new_world[index];
+    }
+    drawNextFrame();
+}
+
 
 function wsSetup() {
     var url = "ws://"+host+"/subscribe";   
     socket = new WebSocket(url);
     socket.onopen = function() {
-        //XXX: TODO What are you going to do here?
+        //XXX: TODO What are you going to do here?  Get the latest world
     };
     socket.onerror = function(msg) {
         debug("WebSocket Error:" + msg.data);
@@ -261,7 +293,12 @@ function wsSetup() {
     socket.onmessage = function(msg) {  
         try {
             debug("WebSocket Recv:" + msg.data);
-            //XXX: TODO What are you going to do here?            
+            //XXX: TODO What are you going to do here?   
+            var message = JSON.parse(msg.data);
+				for (key in message) {
+					world[key] = message[key];
+				}
+            drawNextFrame();         
         } catch (e) {
             alert("socket on message: " + e);
         }
@@ -269,9 +306,6 @@ function wsSetup() {
 }
 
 wsSetup();
-
-
-
 
 // 30 frames per second
 setInterval( update, 1000/30.0);
