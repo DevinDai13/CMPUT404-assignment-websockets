@@ -45,19 +45,6 @@ debug("Test");
 
 world = {};
 
-// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch  Accessed on 2020-03-16
-function sendJSONFetchHTTPRequest(url, objects, callback) {
-    return fetch(url, {
-    method: 'POST', 
-    body: JSON.stringify(objects),
-    headers: new Headers({
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    }),
-    });
-    
-}
-
 // https://github.com/DevinDai13/CMPUT404-assignment-ajax by Devin Dai. Accessed on 2020-03-16
 //XXX: TODO Make this prettier!
 function drawCircle(context,entity) {
@@ -137,8 +124,8 @@ function getPosition(e) {
 	}
 }
 
-function do_nothing_callback(new_world){
-}
+/*function do_nothing_callback(new_world){
+}*/
 
 function addEntity(entity, data) {
     world[entity] = data;
@@ -147,8 +134,7 @@ function addEntity(entity, data) {
     var new_entity = {};
     new_entity[entity] = data;
     socket.send(JSON.stringify(new_entity));
-    // update the newest entity
-    sendJSONFetchHTTPRequest('/entity/' + entity, world[entity], do_nothing_callback);
+
 }
 var counter = 0;
 function addEntityWithoutName(data) {
