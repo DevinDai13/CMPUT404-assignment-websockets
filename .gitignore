@@ -36,6 +36,7 @@ nosetests.xml
 .pydevproject
 *~
 
+venv
 venv/.Python
 venv/include/python3.7m
 venv/include/site/python3.7/greenlet/greenlet.h
