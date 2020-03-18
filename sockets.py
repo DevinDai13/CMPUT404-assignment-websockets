@@ -30,6 +30,7 @@ app.debug = True
 # Some ideas and code are taken from my Assignment 4 
 # https://github.com/abramhindle/WebSocketsExamples/blob/master/chat.py by Abram Hindle. Accessed on 2020-03-16
 # https://github.com/DevinDai13/CMPUT404-assignment-ajax by Devin Dai. Accessed on 2020-03-16
+# https://www.w3schools.com/python/python_json.asp. Accessed on 2020-03-16
 
 clients = list()
 
@@ -147,7 +148,7 @@ def flask_post_json():
 @app.route("/entity/<entity>", methods=['POST','PUT'])
 def update(entity):
     '''update the entities via this interface'''
-    i = 0;
+    i = 0
     while (i < len(flask_post_json())):
         myWorld.update(entity, flask_post_json().keys()[i], flask_post_json().values()[i])
         i += 1

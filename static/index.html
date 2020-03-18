@@ -107,7 +107,6 @@ function drawFrame() {
 
 // This is unpleasent, canvas clicks are not handled well
 // So use this code, it works well on multitouch devices as well.
-
 function getPosition(e) {
 	if ( e.targetTouches && e.targetTouches.length > 0) {
 		var touch = e.targetTouches[0];
@@ -124,9 +123,6 @@ function getPosition(e) {
 	}
 }
 
-/*function do_nothing_callback(new_world){
-}*/
-
 function addEntity(entity, data) {
     world[entity] = data;
     drawNextFrame(); // (but should we?)
@@ -134,7 +130,6 @@ function addEntity(entity, data) {
     var new_entity = {};
     new_entity[entity] = data;
     socket.send(JSON.stringify(new_entity));
-
 }
 var counter = 0;
 function addEntityWithoutName(data) {
@@ -280,9 +275,9 @@ function wsSetup() {
         try {
             debug("WebSocket Recv:" + msg.data);
             //XXX: TODO What are you going to do here?   
-            var message = JSON.parse(msg.data);
-				for (key in message) {
-					world[key] = message[key];
+            var getMessage = JSON.parse(msg.data);
+				for (key in getMessage) {
+					world[key] = getMessage[key];
 				}
             drawNextFrame();         
         } catch (e) {
