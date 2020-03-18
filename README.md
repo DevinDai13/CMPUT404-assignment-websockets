@@ -59,3 +59,10 @@ Contributors
 * Mark Galloway
 * Abram Hindle
 * Cole Mackenzie
+
+References
+========================
+- Some ideas and code are taken from my Assignment 4 
+- 'https://github.com/abramhindle/WebSocketsExamples/blob/master/chat.py' by Abram Hindle. Accessed on 2020-03-16
+- 'https://github.com/DevinDai13/CMPUT404-assignment-ajax' by Devin Dai. Accessed on 2020-03-16
+- 'https://www.w3schools.com/python/python_json.asp'. Accessed on 2020-03-16
