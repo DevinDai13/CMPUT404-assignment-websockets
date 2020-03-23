@@ -66,3 +66,4 @@ References
 - 'https://github.com/abramhindle/WebSocketsExamples/blob/master/chat.py' by Abram Hindle. Accessed on 2020-03-16
 - 'https://github.com/DevinDai13/CMPUT404-assignment-ajax' by Devin Dai. Accessed on 2020-03-16
 - 'https://www.w3schools.com/python/python_json.asp'. Accessed on 2020-03-16
+- 'https://stackoverflow.com/questions/7241878/for-in-loops-in-javascript-key-value-pairs' answered Aug 30 '11 at 10:37 J0HN. Accessed on 2020-03-16
