@@ -253,15 +253,7 @@ function update() {
     drawFrame();
 }
 
-// Reference: https://stackoverflow.com/questions/7241878/for-in-loops-in-javascript-key-value-pairs answered Aug 30 '11 at 10:37 J0HN. Accessed on 2020-03-16
-function get_new_world_callback(new_world){
-    for (let index in new_world){
-        world[index] = new_world[index];
-    }
-    drawNextFrame();
-}
-
-
+//Reference: 'https://stackoverflow.com/questions/7241878/for-in-loops-in-javascript-key-value-pairs' answered Aug 30 '11 at 10:37 J0HN. Accessed on 2020-03-16
 function wsSetup() {
     var url = "ws://"+host+"/subscribe";   
     socket = new WebSocket(url);
